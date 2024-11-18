@@ -1,10 +1,14 @@
 package edu.calpoly.dltompki.csc305.project.article;
 
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.calpoly.dltompki.csc305.project.source.Visitor;
 
-@RequiredArgsConstructor
 public class SimpleParser implements Parser<Simple> {
     private final GenericParser g;
+
+    public SimpleParser(ObjectMapper om) {
+        g = new GenericParser(om);
+    }
 
     @Override
     public Simple parseFromFileName(String filename) throws GenericParser.ParserException {
@@ -14,5 +18,10 @@ public class SimpleParser implements Parser<Simple> {
     @Override
     public Simple parseFromUrl(String urlString) throws GenericParser.ParserException {
         return g.parseFromUrl(urlString, Simple.class);
+    }
+
+    @Override
+    public Simple accept(Visitor v) throws GenericParser.ParserException {
+        return v.visit(this);
     }
 }
