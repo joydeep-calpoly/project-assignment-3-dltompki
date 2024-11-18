@@ -26,14 +26,14 @@ import static org.mockito.Mockito.verify;
 class ArticleTest {
     @Mock
     Logger logger;
-    private Parser parser;
+    private GenericParser parser;
 
     /**
      * Instantiate a new parser for each test
      */
     @BeforeEach
     void setUp() {
-        parser = new Parser(new ObjectMapper()
+        parser = new GenericParser(new ObjectMapper()
                 .enable(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES)
                 .registerModule(new SimpleModule().addDeserializer(Response.class, new ResponseDeserializer(logger))));
     }
@@ -128,7 +128,7 @@ class ArticleTest {
     @ParameterizedTest
     @ValueSource(strings = {"description", "publishedAt", "title", "url"})
     void simpleMissing(final String fileName) {
-        assertThrows(Parser.ParserException.class, () -> {
+        assertThrows(GenericParser.ParserException.class, () -> {
             parser.parseFromFileName("simpleMissing/" + fileName + ".json", Simple.class);
         });
     }
@@ -137,7 +137,7 @@ class ArticleTest {
         T result = null;
         try {
             result = parser.parseFromFileName(s, clazz);
-        } catch (Parser.ParserException e) {
+        } catch (GenericParser.ParserException e) {
             fail();
         }
         return result;

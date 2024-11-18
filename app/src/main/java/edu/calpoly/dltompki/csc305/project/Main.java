@@ -2,7 +2,7 @@ package edu.calpoly.dltompki.csc305.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import edu.calpoly.dltompki.csc305.project.article.Parser;
+import edu.calpoly.dltompki.csc305.project.article.GenericParser;
 import edu.calpoly.dltompki.csc305.project.article.Simple;
 import edu.calpoly.dltompki.csc305.project.article.newsapi.Article;
 import edu.calpoly.dltompki.csc305.project.article.newsapi.Response;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class Main {
-    private static final Parser parser = createParser();
+    private static final GenericParser parser = createParser();
 
     /**
      * Parse the two input files provided by the assignment and the NewsAPI endpoint specified by the assignment.
@@ -34,7 +34,7 @@ public class Main {
             Response response = parser.parseFromFileName("newsapi.json", Response.class);
             List<Article> articles = response.getArticles();
             articles.forEach(System.out::println);
-        } catch (Parser.ParserException e) {
+        } catch (GenericParser.ParserException e) {
             System.err.println("exception thrown while parsing:");
             System.err.println(e);
         }
@@ -43,7 +43,7 @@ public class Main {
         try {
             Simple simple = parser.parseFromFileName("simple.json", Simple.class);
             System.out.println(simple);
-        } catch (Parser.ParserException e) {
+        } catch (GenericParser.ParserException e) {
             System.err.println("exception thrown while parsing:");
             System.err.println(e);
         }
@@ -77,14 +77,14 @@ public class Main {
         try {
             Response response = parser.parseFromString(Response.class, line);
             response.getArticles().forEach(System.out::println);
-        } catch (Parser.ParserException e) {
+        } catch (GenericParser.ParserException e) {
             System.err.println("exception thrown while parsing:");
             System.err.println(e);
         }
     }
 
     @SneakyThrows
-    private static Parser createParser() {
+    private static GenericParser createParser() {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule simpleModule = new SimpleModule();
         new File("build/logs").mkdirs();
@@ -95,6 +95,6 @@ public class Main {
         logger.addHandler(handler);
         simpleModule.addDeserializer(Response.class, new ResponseDeserializer(logger));
         mapper.registerModule(simpleModule);
-        return new Parser(mapper);
+        return new GenericParser(mapper);
     }
 }
