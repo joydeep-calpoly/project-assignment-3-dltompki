@@ -13,7 +13,7 @@ public class NewsApiParser implements Parser<Response> {
     }
 
     @Override
-    public Response parseFromString(String content) throws GenericParser.ParserException {
-        return g.parseFromString(Response.class, content);
+    public Response parseFromUrl(String urlString) throws GenericParser.ParserException {
+        return g.parseFromUrl(urlString, Response.class);
     }
 }

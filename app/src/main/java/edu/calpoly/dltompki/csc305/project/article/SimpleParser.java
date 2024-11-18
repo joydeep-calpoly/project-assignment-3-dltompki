@@ -12,7 +12,7 @@ public class SimpleParser implements Parser<Simple> {
     }
 
     @Override
-    public Simple parseFromString(String content) throws GenericParser.ParserException {
-        return g.parseFromString(Simple.class, content);
+    public Simple parseFromUrl(String urlString) throws GenericParser.ParserException {
+        return g.parseFromUrl(urlString, Simple.class);
     }
 }

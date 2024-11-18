@@ -9,12 +9,7 @@ import edu.calpoly.dltompki.csc305.project.article.newsapi.Response;
 import edu.calpoly.dltompki.csc305.project.article.newsapi.ResponseDeserializer;
 import lombok.SneakyThrows;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -49,33 +44,9 @@ public class Main {
         }
 
         System.out.println("=== NewsAPI US Headlines Endpoint ===");
-        HttpURLConnection conn;
-        int responseCode;
+        String url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=" + args[0];
         try {
-            URL url = new URL("https://newsapi.org/v2/top-headlines?country=us&apiKey=" + args[0]);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            responseCode = conn.getResponseCode();
-        } catch (IOException e) {
-            System.err.println("exception thrown while getting endpoint");
-            System.err.println(e);
-            return;
-        }
-        if (responseCode != 200) {
-            System.out.println("Error: " + responseCode);
-            return;
-        }
-        String line;
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            line = reader.readLine();
-        } catch (IOException e) {
-            System.err.println("exception thrown while reading endpoint response");
-            System.err.println(e);
-            return;
-        }
-        try {
-            Response response = parser.parseFromString(Response.class, line);
+            Response response = parser.parseFromUrl(url, Response.class);
             response.getArticles().forEach(System.out::println);
         } catch (GenericParser.ParserException e) {
             System.err.println("exception thrown while parsing:");
